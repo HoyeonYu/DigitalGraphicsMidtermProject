@@ -1,0 +1,5 @@
+﻿  소스.cpp
+D:\study\OpenGL\210430_OpenGL_midtermProject\210430_OpenGL_midtermProject\Mesh.h(134,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+D:\study\OpenGL\210430_OpenGL_midtermProject\210430_OpenGL_midtermProject\Mesh.h(163,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+D:\study\OpenGL\210430_OpenGL_midtermProject\210430_OpenGL_midtermProject\Mesh.h(178,21): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  210430_OpenGL_midtermProject.vcxproj -> D:\study\OpenGL\210430_OpenGL_midtermProject\Debug\210430_OpenGL_midtermProject.exe
