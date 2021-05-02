@@ -23,10 +23,9 @@ int vecTotalX = 0, vecTotalY = 0, vecTotalZ = 0;
 int vecLeftY = 0, vecCenterX = 0, vecRightZ = 0;
 int vecMesh = 0, vecStick = 0;
 int posTotalX = 0, posTotalY = 0, posTotalZ = 0;
-int posLeftX = 0, posCenterY = 0, posRightZ = 0;
-int posCenterPartX = 0, posCenterPartZ = 0;
-int posLeftDir = 1, posCenterDir = 1, posRightDir = 1, posCenterPartDir = 1;
-bool isAngleStickIncrease = false;
+int posLeftX = 0, posCenterY = 0, posRightZ = 0, posCenterPart = 0;
+int posDir = 1;
+bool isAngleStickIncrease = false, isPosPartIncrease = false;
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
@@ -65,19 +64,44 @@ void display() {
 
 	glRotatef(angleMesh, 0, vecMesh, 0);
 	glTranslatef(-40, -10, 0);
-	meshCat.RenderMesh(VECTOR3D(0, 1, 0),  0.04);
+	meshCat.RenderMesh(VECTOR3D(0.4, 0.4, 0.4), 0.04);
 
-	glTranslatef(0, 20, 0);
-	glRotatef(angleMesh, vecMesh, 0, 0);
-	glTranslatef(0, -5, 0);
+	glTranslatef(0, 15, 0);
+	glPushMatrix();	// 1
+
+	/*
+	glRotatef(-angleMesh, 0, vecMesh, 0);
+	glTranslatef(40, 5, 0);
+	{
+		double epiCycloidLargeR = 10;
+		double epiCycloidK = 4;
+		double epiCycloidSmallR = epiCycloidLargeR / epiCycloidK;
+
+		glTranslatef(-epiCycloidLargeR, 0, 0);
+		angleMesh += 90;
+
+		glTranslatef(epiCycloidSmallR * ((epiCycloidK + 1) * cos(radian(angleMesh)) - cos((epiCycloidK + 1) * radian(angleMesh))),
+			epiCycloidSmallR * ((epiCycloidK + 1) * sin(radian(angleMesh)) - sin(radian((epiCycloidK + 1) * angleMesh))), 0);
+
+		angleMesh -= 90;
+	}
+*/
+	//glTranslatef(0, 20, 0);
+	//glRotatef(angleMesh, vecMesh, 0, 0);
+	//glTranslatef(0, -5, 0);
+
+	glRotatef(angleMesh, 0, vecMesh, 0);
 	meshLove.RenderMesh(VECTOR3D(1, 0, 0), 0.1);
 
-	glTranslatef(0, 5, 0);
-	glRotatef(-angleMesh, vecMesh, 0, 0);
-	glTranslatef(0, -20, 0);
+	glPopMatrix();	// 1
+	
+	//glTranslatef(0, 5, 0);
+	//glRotatef(-angleMesh, vecMesh, 0, 0);
+	//glTranslatef(0, -20, 0);
+	glTranslatef(0, -15, 0);
 	glTranslatef(80, 0, 0);
 	glRotatef(180, 0, 1, 0);
-	meshDeer.RenderMesh(VECTOR3D(0, 0, 1), 0.02);
+	meshDeer.RenderMesh(VECTOR3D(0.8, 0.4, 0.2), 0.02);
 	glPopMatrix();	// 1
 
 	{
@@ -85,24 +109,23 @@ void display() {
 		glBegin(GL_LINES);
 		glColor3f(1, 0, 0);
 		glVertex3f(-40, 0, 0);
-		glVertex3f(0, 0, 0);
-		glColor3f(1, 0, 1);
-		glVertex3f(0, 0, 0);
 		glVertex3f(40, 0, 0);
 
 		glColor3f(0, 1, 0);
 		glVertex3f(0, -40, 0);
-		glVertex3f(0, 0, 0);
-		glColor3f(1, 1, 0);
-		glVertex3f(0, 0, 0);
 		glVertex3f(0, 40, 0);
 
 		glColor3f(0, 0, 1);
 		glVertex3f(0, 0, -40);
-		glVertex3f(0, 0, 0);
-		glColor3f(0, 1, 1);
-		glVertex3f(0, 0, 0);
 		glVertex3f(0, 0, 40);
+
+		glColor3f(0, 1, 1);
+		glVertex3f(20, 0, -60);
+		glVertex3f(20, 0, 60);
+
+		glColor3f(1, 0, 1);
+		glVertex3f(-60, -10, 0);
+		glVertex3f(60, -10, 0);
 		glEnd();
 		// Red: x(-), Magenta: x(+) // Green: y(-), Yellow: y(+)// Blue: z(-), Cyan: z(+) //
 	}
@@ -112,6 +135,13 @@ void display() {
 	glPushMatrix();	// 1-3 유
 
 	glPopMatrix();	// 1-3 유
+
+
+	glTranslatef(42, 0, 0);
+	glRotatef(angleMesh, 0, 0, vecMesh);
+	glTranslatef(-42, 0, 0);
+	glRotatef(-angleMesh, 0, 0, vecMesh);
+
 	{	// 유 - ㅇ
 		glTranslatef(posLeftX, 0, 0);
 		glPushMatrix();	// 1-3 유
@@ -252,7 +282,7 @@ void display() {
 	
 		glPopMatrix();	// 1-2-1 ㅎ 
 		{	// 호 - ㅗ - | 
-			glTranslatef(posCenterPartX, 0, posCenterPartZ);
+			glTranslatef(posCenterPart, 0, posCenterPart);
 			glTranslatef(0, -5.5 * scaleY, 0);
 			glScalef(2, 3.5, 2);
 			glRotatef(anglePart, vecCenterX, 0, 0);
@@ -275,6 +305,10 @@ void display() {
 
 	glPopMatrix();	// 1-1
 	glPushMatrix();	// 1-1-1
+
+	glTranslatef(0, -10, posRightZ);
+	glRotatef(angleMesh, vecMesh, 0, 0);
+	glTranslatef(0, 10, posRightZ);
 
 	{	// 연 - ㅇ
 		glTranslatef(0, 0, posRightZ);
@@ -392,7 +426,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	if (key == 'a') {
 		angleTotal = 5;
-		anglePart += 5;
+		anglePart = (anglePart + 5) % 360;
 		vecTotalX = 1;
 		vecLeftY = 1;
 		vecCenterX = 1;
@@ -401,7 +435,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	if (key == 'A') {
 		angleTotal = 5;
-		anglePart -= 5;
+		anglePart = (anglePart - 5 + 360) % 360;
 		vecTotalX = -1;
 		vecLeftY = 1;
 		vecCenterX = 1;
@@ -410,7 +444,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	if (key == 's') {
 		angleTotal = 5;
-		anglePart += 5;
+		anglePart = (anglePart + 5) % 360;
 		vecTotalY = 1;
 		vecLeftY = 1;
 		vecCenterX = 1;
@@ -419,7 +453,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	if (key == 'S') {
 		angleTotal = 5;
-		anglePart -= 5;
+		anglePart = (anglePart - 5 + 360) % 360;
 		vecTotalY = -1;
 		vecLeftY = 1;
 		vecCenterX = 1;
@@ -428,7 +462,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	if (key == 'd') {
 		angleTotal = 5;
-		anglePart += 5;
+		anglePart = (anglePart + 5) % 360;
 		vecTotalZ = 1;
 		vecLeftY = 1;
 		vecCenterX = 1;
@@ -437,7 +471,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	if (key == 'D') {
 		angleTotal = 5;
-		anglePart -= 5;
+		anglePart = (anglePart - 5 + 360) % 360;
 		vecTotalZ = -1;
 		vecLeftY = 1;
 		vecCenterX = 1;
@@ -457,40 +491,58 @@ void dirKeyboard(int key, int x, int y) {
 		posTotalX = -1;
 		posTotalY = -1;
 
-		posLeftX = 5 * posLeftDir;
-		posLeftDir *= -1;
+		if (isPosPartIncrease) {
+			posLeftX += 1;
+			posCenterY += 1.5;
+			posRightZ += 2;
+			posCenterPart += 1.5;
 
-		posCenterY = 10 * posCenterDir;
-		posCenterDir *= -1;
+			if (posLeftX > 10) {
+				isPosPartIncrease = false;
+			}
+		}
 
-		posRightZ = 15 * posRightDir;
-		posRightDir *= -1;
+		else {
+			posLeftX -= 1;
+			posCenterY -= 1.5;
+			posRightZ -= 2;
+			posCenterPart -= 1.5;
 
-		posCenterPartX = 10 * posCenterPartDir;
-		posCenterPartZ = 10 * posCenterPartDir;
-		posCenterPartDir *= -1;
+			if (posLeftX < -10) {
+				isPosPartIncrease = true;
+			}
+		}
 	}
 
 	if (key == GLUT_KEY_RIGHT) {
 		posTotalX = 1;
 		posTotalY = 1;
 
-		posLeftX = 5 * posLeftDir;
-		posLeftDir *= -1;
+		if (isPosPartIncrease) {
+			posLeftX += 1;
+			posCenterY += 1.5;
+			posRightZ += 2;
+			posCenterPart += 1.5;
 
-		posCenterY = 10 * posCenterDir;
-		posCenterDir *= -1;
+			if (posLeftX > 10) {
+				isPosPartIncrease = false;
+			}
+		}
 
-		posRightZ = 15 * posRightDir;
-		posRightDir *= -1;
+		else {
+			posLeftX -= 1;
+			posCenterY -= 1.5;
+			posRightZ -= 2;
+			posCenterPart -= 1.5;
 
-		posCenterPartX = 10 * posCenterPartDir;
-		posCenterPartZ = 10 * posCenterPartDir;
-		posCenterPartDir *= -1;
+			if (posLeftX < -10) {
+				isPosPartIncrease = true;
+			}
+		}
 	}
 
 	if (key == GLUT_KEY_UP) {
-		angleMesh += 5;
+		angleMesh = (angleMesh + 5) % 360;
 
 		if (isAngleStickIncrease) {
 			angleStick += 5;
@@ -513,7 +565,7 @@ void dirKeyboard(int key, int x, int y) {
 	}
 
 	if (key == GLUT_KEY_DOWN) {
-		angleMesh -= 5;
+		angleMesh = (angleMesh - 5 + 360) % 360;
 
 		if (isAngleStickIncrease) {
 			angleStick += 5;
@@ -530,6 +582,7 @@ void dirKeyboard(int key, int x, int y) {
 				isAngleStickIncrease = true;
 			}
 		}
+
 		vecMesh = 1;
 		vecStick = 1;
 	}
@@ -537,9 +590,9 @@ void dirKeyboard(int key, int x, int y) {
 	if (key == GLUT_KEY_HOME) {
 		anglePart = angleMesh = angleStick = 0;
 		posLeftX = posCenterY = posRightZ = 0;
-		posCenterPartX = posCenterPartZ = 0;
+		posCenterPart = 0;
 		scaleX = scaleY = scaleXZ = scaleYZ = 1; 
-		posLeftDir = posCenterDir = posRightDir = posCenterPartDir = 1;
+		posDir = posDir = posDir = posDir = 1;
 		vecMesh = vecStick = 0;
 	}
 
@@ -547,5 +600,5 @@ void dirKeyboard(int key, int x, int y) {
 }
 
 double radian(double angle) {
-	return (180 / PI) * angle;
+	return (PI / 180) * angle;
 }
