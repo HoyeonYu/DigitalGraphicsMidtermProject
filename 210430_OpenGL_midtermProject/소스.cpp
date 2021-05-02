@@ -1,8 +1,10 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cmath>
 #include "gl/glut.h"
 #include "Mesh.h"
+#define PI 3.14159265
 using namespace std;
 
 void init();
@@ -12,17 +14,19 @@ void mouseButton(int button, int state, int x, int y);
 void mouseDrag(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void dirKeyboard(int key, int x, int y);
+double radian(double angle);
 
 Mesh meshCat, meshDeer, meshLove;
 GLfloat mouseX, mouseY, scaleTotal = 1, scaleX = 1, scaleY = 1, scaleXZ = 1, scaleYZ = 1;
-int angleTotal = 0, anglePart = 0, angleMesh = 0;
+int angleTotal = 0, anglePart = 0, angleMesh = 0, angleStick = 0;
 int vecTotalX = 0, vecTotalY = 0, vecTotalZ = 0;
 int vecLeftY = 0, vecCenterX = 0, vecRightZ = 0;
-int vecMeshY = 0;
+int vecMesh = 0, vecStick = 0;
 int posTotalX = 0, posTotalY = 0, posTotalZ = 0;
 int posLeftX = 0, posCenterY = 0, posRightZ = 0;
 int posCenterPartX = 0, posCenterPartZ = 0;
 int posLeftDir = 1, posCenterDir = 1, posRightDir = 1, posCenterPartDir = 1;
+bool isAngleStickIncrease = false;
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
@@ -59,17 +63,17 @@ void display() {
 
 	glPushMatrix();	// 1
 
-	glRotatef(angleMesh, 0, vecMeshY, 0);
+	glRotatef(angleMesh, 0, vecMesh, 0);
 	glTranslatef(-40, -10, 0);
 	meshCat.RenderMesh(VECTOR3D(0, 1, 0),  0.04);
 
 	glTranslatef(0, 20, 0);
-	glRotatef(angleMesh, vecMeshY, 0, 0);
+	glRotatef(angleMesh, vecMesh, 0, 0);
 	glTranslatef(0, -5, 0);
 	meshLove.RenderMesh(VECTOR3D(1, 0, 0), 0.1);
 
 	glTranslatef(0, 5, 0);
-	glRotatef(-angleMesh, vecMeshY, 0, 0);
+	glRotatef(-angleMesh, vecMesh, 0, 0);
 	glTranslatef(0, -20, 0);
 	glTranslatef(80, 0, 0);
 	glRotatef(180, 0, 1, 0);
@@ -110,6 +114,69 @@ void display() {
 	glPopMatrix();	// 1-3 유
 	{	// 유 - ㅇ
 		glTranslatef(posLeftX, 0, 0);
+		glPushMatrix();	// 1-3 유
+		glPushMatrix();	// 1-3 유
+
+		{
+			glColor3f(1, 0, 1);
+			glTranslatef(-24, 4, 0);
+			glTranslatef(0.5, 2, 0);
+			glRotatef(angleStick, 0, 0, vecStick);
+			glTranslatef(0.5, 2, 0);
+			glPushMatrix();	// 1-3 유
+
+			glRotatef(30, 0, 0, 1);
+			glScalef(1, 4, 1);
+			glutSolidCube(1.0);
+
+			glPopMatrix();	// 1-3 유
+
+			glTranslatef(-1, 1.5, 0);
+			glRotatef(angleStick, 0, 0, vecStick);
+			glRotatef(20, 0, 0, 1);
+			glTranslatef(0, 1.5, 0);
+			glScalef(1, 3, 1);
+
+			glColor3f(1, 1, 0);
+			glutSolidCube(1.0);
+			glColor3f(0, 0, 0);
+			glutWireCube(1.0);
+		}
+
+		glPopMatrix();	// 1-3 유
+
+		{
+			glColor3f(1, 0, 1);
+			glTranslatef(-18, 4, 0);
+			glTranslatef(0.5, 2, 0);
+			glRotatef(-angleStick, 0, 0, vecStick);
+			glTranslatef(0.5, 2, 0);
+			glPushMatrix();	// 1-3 유
+
+			glRotatef(-30, 0, 0, 1);
+			glScalef(1, 4, 1);
+			glutSolidCube(1.0);
+
+			glPopMatrix();	// 1-3 유
+
+			glTranslatef(1, 1.5, 0);
+			glRotatef(-angleStick, 0, 0, vecStick);
+			glRotatef(-20, 0, 0, 1);
+			glTranslatef(0, 1.5, 0);
+			glScalef(1, 3, 1);
+
+			glColor3f(1, 1, 0);
+			glutSolidCube(1.0);
+			glColor3f(0, 0, 0);
+			glutWireCube(1.0);
+		}
+
+
+
+
+		glPopMatrix();	// 1-3 유
+
+
 		glTranslatef(-20, 4, 0);
 		glColor3f(1, 1, 1);
 		glutSolidSphere(4, 30, 30);
@@ -424,22 +491,61 @@ void dirKeyboard(int key, int x, int y) {
 
 	if (key == GLUT_KEY_UP) {
 		angleMesh += 5;
-		vecMeshY = 1;
+
+		if (isAngleStickIncrease) {
+			angleStick += 5;
+
+			if (angleStick > 20) {
+				isAngleStickIncrease = false;
+			}
+		}
+
+		else {
+			angleStick -= 5;
+
+			if (angleStick < -20) {
+				isAngleStickIncrease = true;
+			}
+		}
+
+		vecMesh = 1;
+		vecStick = 1;
 	}
 
 	if (key == GLUT_KEY_DOWN) {
 		angleMesh -= 5;
-		vecMeshY = 1;
+
+		if (isAngleStickIncrease) {
+			angleStick += 5;
+
+			if (angleStick > 20) {
+				isAngleStickIncrease = false;
+			}
+		}
+
+		else {
+			angleStick -= 5;
+
+			if (angleStick < -20) {
+				isAngleStickIncrease = true;
+			}
+		}
+		vecMesh = 1;
+		vecStick = 1;
 	}
 
 	if (key == GLUT_KEY_HOME) {
-		anglePart = angleMesh = 0;
+		anglePart = angleMesh = angleStick = 0;
 		posLeftX = posCenterY = posRightZ = 0;
 		posCenterPartX = posCenterPartZ = 0;
 		scaleX = scaleY = scaleXZ = scaleYZ = 1; 
 		posLeftDir = posCenterDir = posRightDir = posCenterPartDir = 1;
-		vecMeshY = 0;
+		vecMesh = vecStick = 0;
 	}
 
 	glutPostRedisplay();
+}
+
+double radian(double angle) {
+	return (180 / PI) * angle;
 }
