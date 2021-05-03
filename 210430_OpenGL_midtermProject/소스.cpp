@@ -5,6 +5,7 @@
 #include "gl/glut.h"
 #include "Mesh.h"
 #define PI 3.14159265
+#define MAX_WINDOW 800
 using namespace std;
 
 void init();
@@ -18,7 +19,7 @@ void dirKeyboard(int key, int x, int y);
 double radian(double angle);
 
 Mesh meshCat, meshDeer, meshLove;
-GLfloat mouseX, mouseY, scaleTotal = 1, scaleX = 1, scaleY = 1, scaleXZ = 1, scaleYZ = 1;
+GLfloat mouseX, mouseY, scaleTotal = 1, scaleX = 1, scaleY = 1, scaleXZ = 1, scaleYZ = 1, scaleAnim = 1;
 int angleTotal = 0, anglePart = 0, angleMesh = 0, angleStick = 0, angleAnim = 0;
 int vecTotalX = 0, vecTotalY = 0, vecTotalZ = 0;
 int vecLeftY = 0, vecCenterX = 0, vecRightZ = 0;
@@ -26,12 +27,12 @@ int vecMesh = 0, vecStick = 0;
 int posTotalX = 0, posTotalY = 0, posTotalZ = 0;
 int posLeftX = 0, posCenterY = 0, posRightZ = 0, posCenterPart = 0;
 int posDir = 1;
-bool isAngleStickIncrease = false, isPosPartIncrease = false;
+bool isAngleStickIncrease = false, isPosPartIncrease = false, isAnimStart = false, isScaleAnimIncrease = false;
 
 int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(800, 800);
+	glutInitWindowSize(MAX_WINDOW, MAX_WINDOW);
 	glutInitWindowPosition(100, 100);
 	glutCreateWindow("Midterm Project");
 	init();
@@ -40,7 +41,7 @@ int main(int argc, char** argv) {
 	meshLove.LoadMesh("love.obj");
 	glutReshapeFunc(resize);
 	glutMouseFunc(mouseButton);
-	//glutMotionFunc(mouseDrag);
+	glutMotionFunc(mouseDrag);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(dirKeyboard);
 	glutDisplayFunc(display);
@@ -203,11 +204,7 @@ void display() {
 			glutWireCube(1.0);
 		}
 
-
-
-
 		glPopMatrix();	// 1-3 유
-
 
 		glTranslatef(-20, 4, 0);
 		glColor3f(1, 1, 1);
@@ -376,7 +373,6 @@ void display() {
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
 	}
-
 	
 	glPopMatrix();	// 1-1-1
 
@@ -399,9 +395,9 @@ void idleDisplay() {
 	glScalef(0.7, 0.7, 0.7);
 	glTranslatef(-10, 10, 0);
 
-	{
+	if (isAnimStart) {
 		double epiCycloidLargeR = 5;
-		double epiCycloidK = 4;
+		double epiCycloidK = 5.5;
 		double epiCycloidSmallR = epiCycloidLargeR / epiCycloidK;
 
 		glTranslatef(-epiCycloidLargeR, 0, 0);
@@ -412,6 +408,7 @@ void idleDisplay() {
 		angleAnim += 4;
 	}
 
+	glRotatef(angleMesh, 0, vecMesh, 0);
 	meshLove.RenderMesh(VECTOR3D(1, 0, 0), 0.1);
 
 	glPopMatrix();	// 1
@@ -419,14 +416,15 @@ void idleDisplay() {
 	meshLove.RenderMesh(VECTOR3D(1, 0, 0), 0.1);
 
 	glPopMatrix();	// 1
-	//glTranslatef(0, 5, 0);
-	//glRotatef(-angleMesh, vecMesh, 0, 0);
-	//glTranslatef(0, -20, 0);
+
 	glTranslatef(0, -15, 0);
 	glTranslatef(80, 0, 0);
+	
 	glRotatef(180, 0, 1, 0);
 	meshDeer.RenderMesh(VECTOR3D(0.8, 0.4, 0.2), 0.02);
+
 	glPopMatrix();	// 1
+
 	{
 		// Red: x(-), Magenta: x(+) // Green: y(-), Yellow: y(+)// Blue: z(-), Cyan: z(+) //
 		glBegin(GL_LINES);
@@ -459,7 +457,10 @@ void idleDisplay() {
 
 	glPopMatrix();	// 1-3 유
 
-
+	if (isAnimStart) {
+		glRotatef(angleAnim, 0, 1, 0);
+	}
+	
 	glTranslatef(42, 0, 0);
 	glRotatef(angleMesh, 0, 0, vecMesh);
 	glTranslatef(-42, 0, 0);
@@ -524,11 +525,7 @@ void idleDisplay() {
 			glutWireCube(1.0);
 		}
 
-
-
-
 		glPopMatrix();	// 1-3 유
-
 
 		glTranslatef(-20, 4, 0);
 		glColor3f(1, 1, 1);
@@ -568,6 +565,27 @@ void idleDisplay() {
 	}
 
 	glPopMatrix();	// 1-2 호
+
+	if (isAnimStart) {
+		glScalef(scaleAnim, scaleAnim, scaleAnim);
+
+		if (isScaleAnimIncrease) {
+			scaleAnim *= 1.05;
+
+			if (scaleAnim > 1.5) {
+				isScaleAnimIncrease = false;
+			}
+		}
+
+		else {
+			scaleAnim /= 1.05;
+
+			if (scaleAnim < 0.7) {
+				isScaleAnimIncrease = true;
+			}
+		}
+	}
+
 	{	// 호 - ㅎ - ㅇ
 		glTranslatef(0, posCenterY, 0);
 		glTranslatef(0, -1, 0);
@@ -583,6 +601,8 @@ void idleDisplay() {
 	glPushMatrix();	// 1-2-1 ㅎ
 
 	glScalef(1, scaleY, 1);
+
+
 	{	// 호 - ㅎ - -
 		glColor3f(1, 1, 1);
 		glTranslatef(-0.3, 7, 0);
@@ -628,6 +648,10 @@ void idleDisplay() {
 
 	glPopMatrix();	// 1-1
 	glPushMatrix();	// 1-1-1
+
+	if (isAnimStart) {
+		glRotatef(angleAnim, 0, 1, 0);
+	}
 
 	glTranslatef(0, -10, posRightZ);
 	glRotatef(angleMesh, vecMesh, 0, 0);
@@ -731,7 +755,6 @@ void mouseButton(int button, int state, int x, int y) {
 		scaleX = scaleY = scaleXZ = scaleYZ *= (1 / 1.6);
 		glutPostRedisplay();
 	}
-
 }
 
 void mouseDrag(int x, int y) {
@@ -799,6 +822,10 @@ void keyboard(unsigned char key, int x, int y) {
 		vecLeftY = 1;
 		vecCenterX = 1;
 		vecRightZ = 1;
+	}
+
+	if (key == 'q') {
+		isAnimStart = (isAnimStart + 1) % 2;
 	}
 	
 	glutPostRedisplay();
