@@ -2,6 +2,8 @@
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <ctime>
+#include <cstdlib>
 #include "gl/glut.h"
 #include "Mesh.h"
 #define PI 3.14159265
@@ -12,6 +14,7 @@ void init();
 void display();
 void idleDisplay();
 void resize(int w, int h);
+void TimerFunc(int value);
 void mouseButton(int button, int state, int x, int y);
 void mouseDrag(int x, int y);
 void keyboard(unsigned char key, int x, int y);
@@ -20,6 +23,7 @@ double radian(double angle);
 
 Mesh meshCat, meshDeer, meshLove;
 GLfloat mouseX, mouseY, scaleTotal = 1, scaleX = 1, scaleY = 1, scaleXZ = 1, scaleYZ = 1, scaleAnim = 1;
+VECTOR3D colorRandVec[10];
 int angleTotal = 0, anglePart = 0, angleMesh = 0, angleStick = 0, angleAnim = 0;
 int vecTotalX = 0, vecTotalY = 0, vecTotalZ = 0;
 int vecLeftY = 0, vecCenterX = 0, vecRightZ = 0;
@@ -27,9 +31,11 @@ int vecMesh = 0, vecStick = 0;
 int posTotalX = 0, posTotalY = 0, posTotalZ = 0;
 int posLeftX = 0, posCenterY = 0, posRightZ = 0, posCenterPart = 0;
 int posDir = 1;
+int colorIdx = 0;
 bool isAngleStickIncrease = false, isPosPartIncrease = false, isAnimStart = false, isScaleAnimIncrease = false;
 
 int main(int argc, char** argv) {
+	srand(time(0));
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(MAX_WINDOW, MAX_WINDOW);
@@ -45,6 +51,7 @@ int main(int argc, char** argv) {
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(dirKeyboard);
 	glutDisplayFunc(display);
+	glutTimerFunc(0, TimerFunc, 1);
 	glutIdleFunc(idleDisplay);
 	glutMainLoop();
 
@@ -205,12 +212,14 @@ void display() {
 		}
 
 		glPopMatrix();	// 1-3 유
+		colorIdx = 0;
 
 		glTranslatef(-20, 4, 0);
-		glColor3f(1, 1, 1);
-		glutSolidSphere(4, 30, 30);
 		glColor3f(0, 0, 0);
-		glutWireSphere(4, 30, 30);
+		glutSolidSphere(4, 30, 30);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
+		glutWireSphere(4, 30, 30); 
+		colorIdx++;
 	}
 
 	{	// 유 - ㅠ - ㅡ
@@ -218,7 +227,7 @@ void display() {
 		glRotatef(anglePart, 0, vecLeftY, 0);
 		glScalef(15, 2, 2);
 		glScalef(scaleX, 1, 1);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -229,7 +238,7 @@ void display() {
 	{	// 유 - ㅠ - |
 		glTranslatef(-2.5, -4.5, 0);
 		glScalef(2, 7, 2);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -237,10 +246,11 @@ void display() {
 
 	{	// 유 - ㅠ - |
 		glTranslatef(2.5, 0, 0);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
+		colorIdx++;
 	}
 
 	glPopMatrix();	// 1-2 호
@@ -248,9 +258,9 @@ void display() {
 		glTranslatef(0, posCenterY, 0);
 		glTranslatef(0, -1, 0);
 		glScalef(1, scaleY, 1);
-		glColor3f(1, 1, 1);
-		glutSolidCone(3.5, 5, 30, 30);
 		glColor3f(0, 0, 0);
+		glutSolidCone(3.5, 5, 30, 30);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutWireCone(3.5, 5, 30, 30);
 	}
 
@@ -260,7 +270,7 @@ void display() {
 
 	glScalef(1, scaleY, 1);
 		{	// 호 - ㅎ - -
-			glColor3f(1, 1, 1);
+			glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 			glTranslatef(-0.3, 7, 0);
 			glScalef(4.5, 1.5, 2);
 			glutSolidTetrahedron();
@@ -273,10 +283,11 @@ void display() {
 		{	// 호 - ㅎ - ㅡ
 			glTranslatef(0, -2, 0);
 			glScalef(10, 1.5, 2);
-			glColor3f(1, 1, 1);
+			glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 			glutSolidCube(1.0);
 			glColor3f(0, 0, 0);
 			glutWireCube(1.0);
+			colorIdx++;
 		}
 	
 		glPopMatrix();	// 1-2-1 ㅎ 
@@ -285,7 +296,7 @@ void display() {
 			glTranslatef(0, -5.5 * scaleY, 0);
 			glScalef(2, 3.5, 2);
 			glRotatef(anglePart, vecCenterX, 0, 0);
-			glColor3f(1, 1, 1);
+			glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 			glutSolidCube(1.0);
 			glColor3f(0, 0, 0);
 			glutWireCube(1.0);
@@ -296,10 +307,11 @@ void display() {
 		{	// 호 - ㅗ - ㅡ
 			glTranslatef(0, - 2, 0);
 			glScalef(14, 2, 2);
-			glColor3f(1, 1, 1);
+			glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 			glutSolidCube(1.0);
 			glColor3f(0, 0, 0);
 			glutWireCube(1.0);
+			colorIdx++;
 		}
 
 	glPopMatrix();	// 1-1
@@ -312,19 +324,20 @@ void display() {
 	{	// 연 - ㅇ
 		glTranslatef(0, 0, posRightZ);
 		glTranslatef(18, 2.5, 0);
-		glColor3f(1, 1, 1);
-		glutSolidTorus(1, 2.5, 30, 30);
 		glColor3f(0, 0, 0);
+		glutSolidTorus(1, 2.5, 30, 30);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutWireTorus(1, 2.5, 30, 30);
+		colorIdx++;
 	}
 
 	glPushMatrix();	// 1-1-1
-
+	
 	{	// 연 - ㅕ - -
 		glTranslatef(4.5, 1.5 * scaleYZ, 0);
 		glScalef(4, 2, 1.5);
 		glScalef(1, scaleYZ, scaleYZ);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -333,7 +346,7 @@ void display() {
 	{	// 연 - ㅕ - -
 		glTranslatef(0, -1.5, 0);
 		glScalef(1, 1, 1);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -345,10 +358,11 @@ void display() {
 		glTranslatef(2, 0.5, 0);
 		glScalef(2, 11, 2);
 		glScalef(1, scaleYZ, scaleYZ);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
+		colorIdx++;
 	}
 
 	glPopMatrix();	// 1-1-1
@@ -357,7 +371,7 @@ void display() {
 		glScalef(2, 5, 2);
 		glScalef(scaleXZ, 1, scaleXZ);
 		glRotatef(anglePart, 0, 0, vecRightZ);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -368,15 +382,13 @@ void display() {
 	{	// 연 - ㄴ - -
 		glTranslatef(4, -1.5, 0);
 		glScalef(8, 2, 2);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
 	}
-	
-	glPopMatrix();	// 1-1-1
 
-	glFlush();
+	glPopMatrix();	// 1-1-1
 	glutSwapBuffers();
 }
 
@@ -526,12 +538,14 @@ void idleDisplay() {
 		}
 
 		glPopMatrix();	// 1-3 유
+		colorIdx = 0;
 
 		glTranslatef(-20, 4, 0);
-		glColor3f(1, 1, 1);
-		glutSolidSphere(4, 30, 30);
 		glColor3f(0, 0, 0);
+		glutSolidSphere(4, 30, 30);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutWireSphere(4, 30, 30);
+		colorIdx++;
 	}
 
 	{	// 유 - ㅠ - ㅡ
@@ -539,7 +553,7 @@ void idleDisplay() {
 		glRotatef(anglePart, 0, vecLeftY, 0);
 		glScalef(15, 2, 2);
 		glScalef(scaleX, 1, 1);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -550,7 +564,7 @@ void idleDisplay() {
 	{	// 유 - ㅠ - |
 		glTranslatef(-2.5, -4.5, 0);
 		glScalef(2, 7, 2);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -558,10 +572,11 @@ void idleDisplay() {
 
 	{	// 유 - ㅠ - |
 		glTranslatef(2.5, 0, 0);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
+		colorIdx++;
 	}
 
 	glPopMatrix();	// 1-2 호
@@ -590,9 +605,9 @@ void idleDisplay() {
 		glTranslatef(0, posCenterY, 0);
 		glTranslatef(0, -1, 0);
 		glScalef(1, scaleY, 1);
-		glColor3f(1, 1, 1);
-		glutSolidCone(3.5, 5, 30, 30);
 		glColor3f(0, 0, 0);
+		glutSolidCone(3.5, 5, 30, 30);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutWireCone(3.5, 5, 30, 30);
 	}
 
@@ -607,6 +622,7 @@ void idleDisplay() {
 		glColor3f(1, 1, 1);
 		glTranslatef(-0.3, 7, 0);
 		glScalef(4.5, 1.5, 2);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidTetrahedron();
 		glColor3f(0, 0, 0);
 		glutWireTetrahedron();
@@ -617,10 +633,11 @@ void idleDisplay() {
 	{	// 호 - ㅎ - ㅡ
 		glTranslatef(0, -2, 0);
 		glScalef(10, 1.5, 2);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
+		colorIdx++;
 	}
 
 	glPopMatrix();	// 1-2-1 ㅎ 
@@ -629,7 +646,7 @@ void idleDisplay() {
 		glTranslatef(0, -5.5 * scaleY, 0);
 		glScalef(2, 3.5, 2);
 		glRotatef(anglePart, vecCenterX, 0, 0);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -640,10 +657,11 @@ void idleDisplay() {
 	{	// 호 - ㅗ - ㅡ
 		glTranslatef(0, -2, 0);
 		glScalef(14, 2, 2);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
+		colorIdx++;
 	}
 
 	glPopMatrix();	// 1-1
@@ -660,10 +678,11 @@ void idleDisplay() {
 	{	// 연 - ㅇ
 		glTranslatef(0, 0, posRightZ);
 		glTranslatef(18, 2.5, 0);
-		glColor3f(1, 1, 1);
-		glutSolidTorus(1, 2.5, 30, 30);
 		glColor3f(0, 0, 0);
+		glutSolidTorus(1, 2.5, 30, 30);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutWireTorus(1, 2.5, 30, 30);
+		colorIdx++;
 	}
 
 	glPushMatrix();	// 1-1-1
@@ -672,7 +691,7 @@ void idleDisplay() {
 		glTranslatef(4.5, 1.5 * scaleYZ, 0);
 		glScalef(4, 2, 1.5);
 		glScalef(1, scaleYZ, scaleYZ);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -681,7 +700,7 @@ void idleDisplay() {
 	{	// 연 - ㅕ - -
 		glTranslatef(0, -1.5, 0);
 		glScalef(1, 1, 1);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -693,10 +712,11 @@ void idleDisplay() {
 		glTranslatef(2, 0.5, 0);
 		glScalef(2, 11, 2);
 		glScalef(1, scaleYZ, scaleYZ);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
+		colorIdx++;
 	}
 
 	glPopMatrix();	// 1-1-1
@@ -705,7 +725,7 @@ void idleDisplay() {
 		glScalef(2, 5, 2);
 		glScalef(scaleXZ, 1, scaleXZ);
 		glRotatef(anglePart, 0, 0, vecRightZ);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
@@ -716,17 +736,27 @@ void idleDisplay() {
 	{	// 연 - ㄴ - -
 		glTranslatef(4, -1.5, 0);
 		glScalef(8, 2, 2);
-		glColor3f(1, 1, 1);
+		glColor3f(colorRandVec[colorIdx].x, colorRandVec[colorIdx].y, colorRandVec[colorIdx].z);
 		glutSolidCube(1.0);
 		glColor3f(0, 0, 0);
 		glutWireCube(1.0);
 	}
 
-
 	glPopMatrix();	// 1-1-1
 
-	glFlush();
 	glutSwapBuffers();
+}
+
+void TimerFunc(int value) {
+	for (int i = 0; i < 10; i++) {
+		double randDoubleX = (rand() / (double)RAND_MAX) / 2 + 0.5;
+		double randDoubleY = (rand() / (double)RAND_MAX) / 2 + 0.5;
+		double randDoubleZ = (rand() / (double)RAND_MAX) / 2 + 0.5;
+
+		colorRandVec[i] = VECTOR3D(randDoubleX, randDoubleY, randDoubleZ);
+	}
+
+	glutTimerFunc(500, TimerFunc, 1);
 }
 
 void resize(int w, int h) {
@@ -827,7 +857,7 @@ void keyboard(unsigned char key, int x, int y) {
 	if (key == 'q') {
 		isAnimStart = (isAnimStart + 1) % 2;
 	}
-	
+
 	glutPostRedisplay();
 }
 
@@ -870,8 +900,8 @@ void dirKeyboard(int key, int x, int y) {
 
 		if (isPosPartIncrease) {
 			posLeftX += 1;
-			posCenterY += 1.5;
-			posRightZ += 2;
+			posCenterY += 2;
+			posRightZ += 1.5;
 			posCenterPart += 1.5;
 
 			if (posLeftX > 10) {
@@ -881,8 +911,8 @@ void dirKeyboard(int key, int x, int y) {
 
 		else {
 			posLeftX -= 1;
-			posCenterY -= 1.5;
-			posRightZ -= 2;
+			posCenterY -= 2;
+			posRightZ -= 1.5;
 			posCenterPart -= 1.5;
 
 			if (posLeftX < -10) {
