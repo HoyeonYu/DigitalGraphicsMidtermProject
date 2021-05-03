@@ -16,7 +16,6 @@ void idleDisplay();
 void resize(int w, int h);
 void TimerFunc(int value);
 void mouseButton(int button, int state, int x, int y);
-void mouseDrag(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void dirKeyboard(int key, int x, int y);
 double radian(double angle);
@@ -47,7 +46,6 @@ int main(int argc, char** argv) {
 	meshLove.LoadMesh("love.obj");
 	glutReshapeFunc(resize);
 	glutMouseFunc(mouseButton);
-	glutMotionFunc(mouseDrag);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(dirKeyboard);
 	glutDisplayFunc(display);
@@ -70,49 +68,25 @@ void display() {
 	glTranslatef(posTotalX, posTotalY, posTotalZ);
 	glScalef(scaleTotal, scaleTotal, scaleTotal);
 
-	glPushMatrix();	// 1
+	glPushMatrix();
 
 	glRotatef(angleMesh, 0, vecMesh, 0);
 	glTranslatef(-40, -10, 0);
 	meshCat.RenderMesh(VECTOR3D(0.4, 0.4, 0.4), 0.04);
 
 	glTranslatef(0, 15, 0);
-	glPushMatrix();	// 1
-
-	/*
-	glRotatef(-angleMesh, 0, vecMesh, 0);
-	glTranslatef(40, 5, 0);
-	{
-		double epiCycloidLargeR = 10;
-		double epiCycloidK = 4;
-		double epiCycloidSmallR = epiCycloidLargeR / epiCycloidK;
-
-		glTranslatef(-epiCycloidLargeR, 0, 0);
-		angleMesh += 90;
-
-		glTranslatef(epiCycloidSmallR * ((epiCycloidK + 1) * cos(radian(angleMesh)) - cos((epiCycloidK + 1) * radian(angleMesh))),
-			epiCycloidSmallR * ((epiCycloidK + 1) * sin(radian(angleMesh)) - sin(radian((epiCycloidK + 1) * angleMesh))), 0);
-
-		angleMesh -= 90;
-	}
-*/
-	//glTranslatef(0, 20, 0);
-	//glRotatef(angleMesh, vecMesh, 0, 0);
-	//glTranslatef(0, -5, 0);
+	glPushMatrix();
 
 	glRotatef(angleMesh, 0, vecMesh, 0);
 	meshLove.RenderMesh(VECTOR3D(1, 0, 0), 0.1);
 
-	glPopMatrix();	// 1
+	glPopMatrix();
 	
-	//glTranslatef(0, 5, 0);
-	//glRotatef(-angleMesh, vecMesh, 0, 0);
-	//glTranslatef(0, -20, 0);
 	glTranslatef(0, -15, 0);
 	glTranslatef(80, 0, 0);
 	glRotatef(180, 0, 1, 0);
 	meshDeer.RenderMesh(VECTOR3D(0.8, 0.4, 0.2), 0.02);
-	glPopMatrix();	// 1
+	glPopMatrix();
 
 	{
 		// Red: x(-), Magenta: x(+) // Green: y(-), Yellow: y(+)// Blue: z(-), Cyan: z(+) //
@@ -140,11 +114,11 @@ void display() {
 		// Red: x(-), Magenta: x(+) // Green: y(-), Yellow: y(+)// Blue: z(-), Cyan: z(+) //
 	}
 
-	glPushMatrix();	// 1-1 연
-	glPushMatrix();	// 1-2 호
-	glPushMatrix();	// 1-3 유
+	glPushMatrix();
+	glPushMatrix();
+	glPushMatrix();
 
-	glPopMatrix();	// 1-3 유
+	glPopMatrix();
 
 
 	glTranslatef(42, 0, 0);
@@ -154,8 +128,8 @@ void display() {
 
 	{	// 유 - ㅇ
 		glTranslatef(posLeftX, 0, 0);
-		glPushMatrix();	// 1-3 유
-		glPushMatrix();	// 1-3 유
+		glPushMatrix();
+		glPushMatrix();
 
 		{
 			glColor3f(1, 0, 1);
@@ -163,13 +137,13 @@ void display() {
 			glTranslatef(0.5, 2, 0);
 			glRotatef(angleStick, 0, 0, vecStick);
 			glTranslatef(0.5, 2, 0);
-			glPushMatrix();	// 1-3 유
+			glPushMatrix();
 
 			glRotatef(30, 0, 0, 1);
 			glScalef(1, 4, 1);
 			glutSolidCube(1.0);
 
-			glPopMatrix();	// 1-3 유
+			glPopMatrix();
 
 			glTranslatef(-1, 1.5, 0);
 			glRotatef(angleStick, 0, 0, vecStick);
@@ -183,7 +157,7 @@ void display() {
 			glutWireCube(1.0);
 		}
 
-		glPopMatrix();	// 1-3 유
+		glPopMatrix();
 
 		{
 			glColor3f(1, 0, 1);
@@ -191,13 +165,13 @@ void display() {
 			glTranslatef(0.5, 2, 0);
 			glRotatef(-angleStick, 0, 0, vecStick);
 			glTranslatef(0.5, 2, 0);
-			glPushMatrix();	// 1-3 유
+			glPushMatrix();
 
 			glRotatef(-30, 0, 0, 1);
 			glScalef(1, 4, 1);
 			glutSolidCube(1.0);
 
-			glPopMatrix();	// 1-3 유
+			glPopMatrix();
 
 			glTranslatef(1, 1.5, 0);
 			glRotatef(-angleStick, 0, 0, vecStick);
@@ -211,7 +185,7 @@ void display() {
 			glutWireCube(1.0);
 		}
 
-		glPopMatrix();	// 1-3 유
+		glPopMatrix();
 		colorIdx = 0;
 
 		glTranslatef(-20, 4, 0);
@@ -253,7 +227,7 @@ void display() {
 		colorIdx++;
 	}
 
-	glPopMatrix();	// 1-2 호
+	glPopMatrix();
 	{	// 호 - ㅎ - ㅇ
 		glTranslatef(0, posCenterY, 0);
 		glTranslatef(0, -1, 0);
@@ -266,7 +240,7 @@ void display() {
 
 	glScalef(1, 1.0 / scaleY, 1);
 
-	glPushMatrix();	// 1-2-1 ㅎ
+	glPushMatrix();
 
 	glScalef(1, scaleY, 1);
 		{	// 호 - ㅎ - -
@@ -290,7 +264,7 @@ void display() {
 			colorIdx++;
 		}
 	
-		glPopMatrix();	// 1-2-1 ㅎ 
+		glPopMatrix();
 		{	// 호 - ㅗ - | 
 			glTranslatef(posCenterPart, 0, posCenterPart);
 			glTranslatef(0, -5.5 * scaleY, 0);
@@ -314,8 +288,8 @@ void display() {
 			colorIdx++;
 		}
 
-	glPopMatrix();	// 1-1
-	glPushMatrix();	// 1-1-1
+	glPopMatrix();
+	glPushMatrix();
 
 	glTranslatef(0, -10, posRightZ);
 	glRotatef(angleMesh, vecMesh, 0, 0);
@@ -331,7 +305,7 @@ void display() {
 		colorIdx++;
 	}
 
-	glPushMatrix();	// 1-1-1
+	glPushMatrix();
 	
 	{	// 연 - ㅕ - -
 		glTranslatef(4.5, 1.5 * scaleYZ, 0);
@@ -365,7 +339,7 @@ void display() {
 		colorIdx++;
 	}
 
-	glPopMatrix();	// 1-1-1
+	glPopMatrix();
 	{	// 연 - ㄴ - |
 		glTranslatef(0, -9.5, 0);
 		glScalef(2, 5, 2);
@@ -388,21 +362,21 @@ void display() {
 		glutWireCube(1.0);
 	}
 
-	glPopMatrix();	// 1-1-1
+	glPopMatrix();
 	glutSwapBuffers();
 }
 
 void idleDisplay() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glPushMatrix();	// 1
+	glPushMatrix();
 
 	glRotatef(angleMesh, 0, vecMesh, 0);
 	glTranslatef(-40, -10, 0);
 	meshCat.RenderMesh(VECTOR3D(0.4, 0.4, 0.4), 0.04);
 
 	glTranslatef(0, 15, 0);
-	glPushMatrix();	// 1
-	glPushMatrix();	// 1
+	glPushMatrix();
+	glPushMatrix();
 
 	glScalef(0.7, 0.7, 0.7);
 	glTranslatef(-10, 10, 0);
@@ -423,11 +397,11 @@ void idleDisplay() {
 	glRotatef(angleMesh, 0, vecMesh, 0);
 	meshLove.RenderMesh(VECTOR3D(1, 0, 0), 0.1);
 
-	glPopMatrix();	// 1
+	glPopMatrix();
 	glRotatef(angleMesh, 0, vecMesh, 0);
 	meshLove.RenderMesh(VECTOR3D(1, 0, 0), 0.1);
 
-	glPopMatrix();	// 1
+	glPopMatrix();
 
 	glTranslatef(0, -15, 0);
 	glTranslatef(80, 0, 0);
@@ -435,7 +409,7 @@ void idleDisplay() {
 	glRotatef(180, 0, 1, 0);
 	meshDeer.RenderMesh(VECTOR3D(0.8, 0.4, 0.2), 0.02);
 
-	glPopMatrix();	// 1
+	glPopMatrix();
 
 	{
 		// Red: x(-), Magenta: x(+) // Green: y(-), Yellow: y(+)// Blue: z(-), Cyan: z(+) //
@@ -463,11 +437,11 @@ void idleDisplay() {
 		// Red: x(-), Magenta: x(+) // Green: y(-), Yellow: y(+)// Blue: z(-), Cyan: z(+) //
 	}
 
-	glPushMatrix();	// 1-1 연
-	glPushMatrix();	// 1-2 호
-	glPushMatrix();	// 1-3 유
+	glPushMatrix();
+	glPushMatrix();
+	glPushMatrix();
 
-	glPopMatrix();	// 1-3 유
+	glPopMatrix();
 
 	if (isAnimStart) {
 		glRotatef(angleAnim, 0, 1, 0);
@@ -480,8 +454,8 @@ void idleDisplay() {
 
 	{	// 유 - ㅇ
 		glTranslatef(posLeftX, 0, 0);
-		glPushMatrix();	// 1-3 유
-		glPushMatrix();	// 1-3 유
+		glPushMatrix();
+		glPushMatrix();
 
 		{
 			glColor3f(1, 0, 1);
@@ -489,13 +463,13 @@ void idleDisplay() {
 			glTranslatef(0.5, 2, 0);
 			glRotatef(angleStick, 0, 0, vecStick);
 			glTranslatef(0.5, 2, 0);
-			glPushMatrix();	// 1-3 유
+			glPushMatrix();
 
 			glRotatef(30, 0, 0, 1);
 			glScalef(1, 4, 1);
 			glutSolidCube(1.0);
 
-			glPopMatrix();	// 1-3 유
+			glPopMatrix();
 
 			glTranslatef(-1, 1.5, 0);
 			glRotatef(angleStick, 0, 0, vecStick);
@@ -509,7 +483,7 @@ void idleDisplay() {
 			glutWireCube(1.0);
 		}
 
-		glPopMatrix();	// 1-3 유
+		glPopMatrix();
 
 		{
 			glColor3f(1, 0, 1);
@@ -517,13 +491,13 @@ void idleDisplay() {
 			glTranslatef(0.5, 2, 0);
 			glRotatef(-angleStick, 0, 0, vecStick);
 			glTranslatef(0.5, 2, 0);
-			glPushMatrix();	// 1-3 유
+			glPushMatrix();
 
 			glRotatef(-30, 0, 0, 1);
 			glScalef(1, 4, 1);
 			glutSolidCube(1.0);
 
-			glPopMatrix();	// 1-3 유
+			glPopMatrix();
 
 			glTranslatef(1, 1.5, 0);
 			glRotatef(-angleStick, 0, 0, vecStick);
@@ -537,7 +511,7 @@ void idleDisplay() {
 			glutWireCube(1.0);
 		}
 
-		glPopMatrix();	// 1-3 유
+		glPopMatrix();
 		colorIdx = 0;
 
 		glTranslatef(-20, 4, 0);
@@ -579,7 +553,7 @@ void idleDisplay() {
 		colorIdx++;
 	}
 
-	glPopMatrix();	// 1-2 호
+	glPopMatrix();
 
 	if (isAnimStart) {
 		glScalef(scaleAnim, scaleAnim, scaleAnim);
@@ -613,10 +587,9 @@ void idleDisplay() {
 
 	glScalef(1, 1.0 / scaleY, 1);
 
-	glPushMatrix();	// 1-2-1 ㅎ
+	glPushMatrix();
 
 	glScalef(1, scaleY, 1);
-
 
 	{	// 호 - ㅎ - -
 		glColor3f(1, 1, 1);
@@ -640,7 +613,7 @@ void idleDisplay() {
 		colorIdx++;
 	}
 
-	glPopMatrix();	// 1-2-1 ㅎ 
+	glPopMatrix();
 	{	// 호 - ㅗ - | 
 		glTranslatef(posCenterPart, 0, posCenterPart);
 		glTranslatef(0, -5.5 * scaleY, 0);
@@ -664,8 +637,8 @@ void idleDisplay() {
 		colorIdx++;
 	}
 
-	glPopMatrix();	// 1-1
-	glPushMatrix();	// 1-1-1
+	glPopMatrix();
+	glPushMatrix();
 
 	if (isAnimStart) {
 		glRotatef(angleAnim, 0, 1, 0);
@@ -685,7 +658,7 @@ void idleDisplay() {
 		colorIdx++;
 	}
 
-	glPushMatrix();	// 1-1-1
+	glPushMatrix();
 
 	{	// 연 - ㅕ - -
 		glTranslatef(4.5, 1.5 * scaleYZ, 0);
@@ -719,7 +692,7 @@ void idleDisplay() {
 		colorIdx++;
 	}
 
-	glPopMatrix();	// 1-1-1
+	glPopMatrix();
 	{	// 연 - ㄴ - |
 		glTranslatef(0, -9.5, 0);
 		glScalef(2, 5, 2);
@@ -742,7 +715,7 @@ void idleDisplay() {
 		glutWireCube(1.0);
 	}
 
-	glPopMatrix();	// 1-1-1
+	glPopMatrix();
 
 	glutSwapBuffers();
 }
@@ -756,7 +729,7 @@ void TimerFunc(int value) {
 		colorRandVec[i] = VECTOR3D(randDoubleX, randDoubleY, randDoubleZ);
 	}
 
-	glutTimerFunc(500, TimerFunc, 1);
+	glutTimerFunc(100, TimerFunc, 1);
 }
 
 void resize(int w, int h) {
@@ -774,24 +747,22 @@ void mouseButton(int button, int state, int x, int y) {
 	posTotalX = posTotalY = posTotalZ = 0;
 	scaleTotal = 1;
 
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
 		scaleTotal *= 1.2;
 		scaleX = scaleY = scaleXZ = scaleYZ *= 1.6;
 		glutPostRedisplay();
 	}
 
-	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+	if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP) {
 		scaleTotal *= (1 / 1.2);
 		scaleX = scaleY = scaleXZ = scaleYZ *= (1 / 1.6);
 		glutPostRedisplay();
 	}
-}
 
-void mouseDrag(int x, int y) {
-	mouseX = x;
-	mouseY = y;
-
-	glutPostRedisplay();
+	if (button == GLUT_MIDDLE_BUTTON && state == GLUT_UP) {
+		isAnimStart = (isAnimStart + 1) % 2;
+		glutPostRedisplay();
+	}
 }
 
 void keyboard(unsigned char key, int x, int y) {
@@ -852,10 +823,6 @@ void keyboard(unsigned char key, int x, int y) {
 		vecLeftY = 1;
 		vecCenterX = 1;
 		vecRightZ = 1;
-	}
-
-	if (key == 'q') {
-		isAnimStart = (isAnimStart + 1) % 2;
 	}
 
 	glutPostRedisplay();
